@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Tumakov": {
+      "commandName": "Project",
+      "commandLineArgs": "\"Tumakov Files/Input text.txt\"\r\n"
+    }
+  }
+}
