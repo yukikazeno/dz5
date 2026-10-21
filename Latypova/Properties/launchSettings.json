@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Latypova": {
+      "commandName": "Project",
+      "commandLineArgs": "\"Latypova Files/Students List.txt\""
+    }
+  }
+}
