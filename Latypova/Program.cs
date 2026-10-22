@@ -27,7 +27,7 @@
                 shuffledList[j] = temp;
             }
 
-            Console.WriteLine("\nПеремешанный спсок:");
+            Console.WriteLine("\nПеремешанный список:");
             Console.WriteLine(string.Join(", ", shuffledList));
         }
         static void Task2(string inputStudents)
