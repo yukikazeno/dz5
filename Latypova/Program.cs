@@ -4,7 +4,7 @@
     {
         static void Task1()
         {
-            string folderPath = @"..\..\..\Latypova Files\Images for task1";
+            string folderPath = @"Latypova Files\Images for task1";
             List<string> imageFiles = new List<string>(Directory.GetFiles(folderPath, "*.jpg"));
            
             List<string> originalList = new List<string>();
