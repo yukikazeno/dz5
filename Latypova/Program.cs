@@ -4,22 +4,25 @@
     {
         static void Task1()
         {
-            List<int> originalList = new List<int>();
-            for (int i = 1; i <= 32; i++)
+            string folderPath = @"..\..\..\Latypova Files\Images for task1";
+            List<string> imageFiles = new List<string>(Directory.GetFiles(folderPath, "*.jpg"));
+           
+            List<string> originalList = new List<string>();
+            for (int i = 0; i < imageFiles.Count; i++)
             {
-                originalList.Add(i);
-                originalList.Add(i);
+                originalList.Add(Path.GetFileName(imageFiles[i]));
+                originalList.Add(Path.GetFileName(imageFiles[i]));
             }
             Console.WriteLine("Изначальный список:");
             Console.WriteLine(string.Join(", ", originalList));
 
-            
-            List<int> shuffledList = new List<int>(originalList);
+
+            List<string> shuffledList = originalList;
             Random rand = new Random();
             for (int i = shuffledList.Count - 1; i > 0; i--)
             {
                 int j = rand.Next(i + 1);
-                int temp = shuffledList[i];
+                string temp = shuffledList[i];
                 shuffledList[i] = shuffledList[j];
                 shuffledList[j] = temp;
             }
@@ -57,7 +60,7 @@
             {
                 Console.WriteLine("Доступные команды: [Новый студент], [Удалить], [Сортировать], [Выход]");
                 Console.Write("Введите команду: ");
-                string command = Console.ReadLine()?.Trim();
+                string command = Console.ReadLine().Trim();
 
                 switch (command)
                 {
@@ -67,7 +70,7 @@
                         Console.Write("Введите имя: ");
                         string fName = Console.ReadLine();
                         Console.Write("Введите год рождения: ");
-                        int year = int.TryParse(Console.ReadLine(), out int y) ? y : 2000;
+                        int year = int.TryParse(Console.ReadLine(), out int y) ? y : 0;
                         Console.Write("Введите вступительный экзамен: ");
                         string exam = Console.ReadLine();
                         Console.Write("Введите баллы: ");
@@ -89,9 +92,9 @@
 
                     case "Удалить":
                         Console.Write("Введите фамилию удаляемого студента: ");
-                        string deleteLName = Console.ReadLine()?.Trim();
+                        string deleteLName = Console.ReadLine().Trim();
                         Console.Write("Введите имя удаляемого студента: ");
-                        string deleteFName = Console.ReadLine()?.Trim();
+                        string deleteFName = Console.ReadLine().Trim();
 
                         string searchKey = $"{deleteLName} {deleteFName}";
 
@@ -129,31 +132,32 @@
         static void Task3()
         {
             Stack<HospitalStruct> hospitalStack = new Stack<HospitalStruct>();
-            hospitalStack.Push(new HospitalStruct("Центральная клиника", 2, new[] { "Грипп", "Радикулит", "Давление" }));
+            hospitalStack.Push(new HospitalStruct("Центральная клиника", 2, new[]{ "Грипп", "Радикулит", "Давление" }));
             hospitalStack.Push(new HospitalStruct("Городская больница No.2", 3, new[] { "Кашель", "Давление", "Артрит" }));
             hospitalStack.Push(new HospitalStruct("Частная клиника", 1, new[] { "Катаракта", "Мигрень" }));
 
             Queue<GrandmaStruct> grandmaQueue = new Queue<GrandmaStruct>();
 
-            while (true)
+            bool isInfoEnter = true;
+            while (isInfoEnter)
             {
                 Console.Write("\nВведите имя бабули (или '0' для выхода): ");
-                string name = Console.ReadLine()?.Trim();
+                string name = Console.ReadLine().Trim();
                 if (name == "0" || string.IsNullOrEmpty(name)) break;
 
                 Console.Write("Введите возраст: ");
-                int age = int.TryParse(Console.ReadLine(), out int a) ? a : 75;
+                byte age = byte.TryParse(Console.ReadLine(), out byte a) ? a : (byte)75;
 
                 Dictionary<string, string> grandmaDiseases = new Dictionary<string, string>();
 
-                while (true)
+                while (isInfoEnter)
                 {
                     Console.Write("Введите болезнь (или Enter, если болезней нет): ");
-                    string disease = Console.ReadLine()?.Trim();
+                    string disease = Console.ReadLine().Trim();
                     if (string.IsNullOrEmpty(disease)) break;
 
                     Console.Write($"Какое лекарство она принимает от '{disease}'? ");
-                    string medicine = Console.ReadLine()?.Trim();
+                    string medicine = Console.ReadLine().Trim();
 
                     if (!grandmaDiseases.ContainsKey(disease))
                     {
@@ -227,6 +231,86 @@
             }
         }
 
+        static void Task4()
+        {
+            Console.Write("Введите стартовую вершину: ");
+            int start = int.TryParse(Console.ReadLine(), out int s) ? s : 0;
+            Console.Write("Введите конечную вершину: ");
+            int end = int.TryParse(Console.ReadLine(), out int e) ? e : 0;
+            var adjacencyList = new Dictionary<int, List<int>>();
+
+            void AddEdge(int src, int dest)
+            {
+                if (!adjacencyList.ContainsKey(src)) adjacencyList[src] = new List<int>();
+                if (!adjacencyList.ContainsKey(dest)) adjacencyList[dest] = new List<int>();
+                adjacencyList[src].Add(dest);
+                adjacencyList[dest].Add(src);
+            }
+
+            AddEdge(0, 1);
+            AddEdge(0, 2);
+            AddEdge(1, 3);
+            AddEdge(1, 4);
+            AddEdge(2, 5);
+            AddEdge(2, 6);
+
+            if (!adjacencyList.ContainsKey(start) || !adjacencyList.ContainsKey(end))
+            {
+                Console.WriteLine("Стартовая или конечная вершина отсутствует в графе.");
+                return;
+            }
+
+            Queue<int> queue = new Queue<int>();
+            HashSet<int> visited = new HashSet<int>();
+            Dictionary<int, int> parentMap = new Dictionary<int, int>();
+
+            queue.Enqueue(start);
+            visited.Add(start);
+            bool isPathFound = false;
+
+            while (queue.Count > 0)
+            {
+                int current = queue.Dequeue();
+
+                if (current == end)
+                {
+                    isPathFound = true;
+                    break;
+                }
+
+                foreach (int neighbor in adjacencyList[current])
+                {
+                    if (!visited.Contains(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        parentMap[neighbor] = current;
+                        queue.Enqueue(neighbor);
+                    }
+                }
+            }
+
+            if (!isPathFound)
+            {
+                Console.WriteLine($"Пути между вершинами {start} и {end} не существует.");
+            }
+            else
+            {
+                List<int> path = new List<int>();
+                int currentVertex = end;
+
+                while (currentVertex != start)
+                {
+                    path.Add(currentVertex);
+                    currentVertex = parentMap[currentVertex];
+                }
+                path.Add(start);
+                path.Reverse();
+
+                Console.WriteLine($"Кратчайший путь от {start} до {end}:");
+                Console.WriteLine(string.Join(" -> ", path));
+            }
+        }
+
         static void Main(string[] args)
         {
             bool isRunning = true;
@@ -250,7 +334,7 @@
                         Task3();
                         break;
                     case "4":
-                        //Task4();
+                        Task4();
                         break;
                     default:
                         Console.WriteLine("Неверный номер задачи. Пожалуйста, введите значение от 1 до 4.");

@@ -2,11 +2,11 @@
 {
     public struct GrandmaStruct
     {
-        public string Name { get; }
-        public int Age { get; }
-        public Dictionary<string, string> Diseases { get; }
+        public string Name;
+        public byte Age;
+        public Dictionary<string, string> Diseases;
 
-        public GrandmaStruct(string name, int age, Dictionary<string, string> diseases)
+        public GrandmaStruct(string name, byte age, Dictionary<string, string> diseases)
         {
             Name = name;
             Age = age;
